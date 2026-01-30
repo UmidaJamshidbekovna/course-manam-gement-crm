@@ -25,8 +25,11 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { useQuasar } from 'quasar'
 import type { CourseModel } from 'src/services/Courses/model'
 import { addCourse } from 'src/services/Courses/api'
+
+const $q = useQuasar()
 
 const props = defineProps<{
   modelValue: boolean
@@ -89,11 +92,17 @@ async function saveCourse() {
   try {
     const savedCourse = await addCourse(formattedData.value)
     if (savedCourse) {
+      $q.notify({ type: 'positive', message: 'Kurs muvaffaqiyatli qo\'shildi!' })
       emit('saved', savedCourse)
+      // Close the modal after successful save
       showModal.value = false
+    } else {
+      $q.notify({ type: 'negative', message: 'Kurs qo\'shishda xatolik yuz berdi!' })
     }
   } catch (err) {
     console.error('Course qo‘shishda xatolik:', err)
+    $q.notify({ type: 'negative', message: 'Serverda xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.' })
+    // Keeping the modal open so user can try again or fix the issue
   }
 }
 </script>

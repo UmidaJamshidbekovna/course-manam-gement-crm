@@ -25,8 +25,11 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { useQuasar } from 'quasar'
 import type { CourseModel } from 'src/services/Courses/model'
 import { updateCourse } from 'src/services/Courses/api'
+
+const $q = useQuasar()
 
 const props = defineProps<{
   modelValue: boolean
@@ -99,11 +102,15 @@ async function saveCourse() {
 
     const updatedCourse = await updateCourse(courseForUpdate)
     if (updatedCourse) {
+      $q.notify({ type: 'positive', message: 'Kurs muvaffaqiyatli tahrirlandi!' })
       emit('updated', updatedCourse)
       showModal.value = false
+    } else {
+      $q.notify({ type: 'negative', message: 'Kurs tahrirlashda xatolik yuz berdi!' })
     }
   } catch (err) {
     console.error('Course tahrirlashda xatolik:', err)
+    $q.notify({ type: 'negative', message: 'Serverda xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.' })
   } finally {
     saving.value = false
   }

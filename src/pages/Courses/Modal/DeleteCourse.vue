@@ -61,13 +61,14 @@ async function confirmDelete() {
     if (success) {
       $q.notify({ type: 'positive', message: 'Muvaffaqiyatli o\'chirildi!' });
       emit('deleted');
-
       localModelValue.value = false;
     } else {
       $q.notify({ type: 'negative', message: 'O\'chirish amalga oshmadi.' });
+      // Keep modal open to allow user to try again
     }
   } catch (err) {
     console.error("Xato:", err);
+    $q.notify({ type: 'negative', message: 'Serverda xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.' });
   } finally {
     deleting.value = false;
   }
