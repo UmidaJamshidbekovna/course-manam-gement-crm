@@ -1,6 +1,5 @@
 <template>
   <q-page class="q-pa-lg">
-    <!-- Header -->
     <div class="row items-center q-mb-lg">
       <q-icon name="assessment" size="32px" class="q-mr-sm" />
       <div>
@@ -11,7 +10,6 @@
       </div>
     </div>
 
-    <!-- Card -->
     <q-card flat bordered class="q-pa-xl flex flex-center">
       <div class="text-center">
         <q-icon

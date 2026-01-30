@@ -62,3 +62,41 @@ export async function addCourse(course: CourseModel): Promise<CourseModel | null
 
   return data && data.length > 0 ? (data[0] as CourseModel) : null
 }
+
+
+
+export async function deleteCourse(courseId: string | number): Promise<boolean> {
+  const { error } = await supabase
+    .from('courses')
+    .delete()
+    .eq('id', Number(courseId)); 
+
+  if (error) {
+    console.error('Supabase xatosi:', error.message);
+    return false;
+  }
+  return true; 
+}
+
+export async function updateCourse(course: CourseModel): Promise<CourseModel | null> {
+  const { data, error } = await supabase
+    .from('courses')
+    .update({
+      title: course.title,
+      author: course.author,
+      category: course.category,
+      students: course.students,
+      rating: course.rating,
+      level: course.level,
+      color: course.color
+    })
+    .eq('id', course.id)
+    .select()
+
+  if (error) {
+    console.error('Supabase update error:', error)
+    return null
+  }
+
+  return data && data.length > 0 ? (data[0] as CourseModel) : null
+}

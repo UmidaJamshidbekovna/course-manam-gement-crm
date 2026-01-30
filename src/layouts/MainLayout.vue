@@ -1,7 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
 
-    <!-- Header -->
     <q-header bordered class="q-pa-sm bg-white text-dark">
       <q-toolbar>
         <q-toolbar-title>
@@ -13,7 +12,6 @@
       </q-toolbar>
     </q-header>
 
-    <!-- Sidebar / Drawer -->
     <q-drawer show-if-above bordered :width="220">
       <div class="q-pa-sm flex flex-center">
         <q-img :src="logo" fit="contain" />
@@ -64,7 +62,6 @@
       </q-list>
     </q-drawer>
 
-    <!-- Page Container -->
     <q-page-container>
       <router-view />
     </q-page-container>

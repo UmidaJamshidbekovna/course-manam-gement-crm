@@ -1,9 +1,5 @@
 <template>
   <q-page padding class="bg-grey-1">
-    <div class="row q-gutter-md justify-between">
-      <!-- Stats Cards (static yoki dynamic) -->
-    </div>
-
     <q-card flat bordered class="q-mt-xl q-pa-md">
       <div class="row items-center justify-between q-mb-md">
         <div class="text-subtitle1 text-weight-bold">

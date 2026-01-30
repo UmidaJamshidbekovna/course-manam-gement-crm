@@ -15,7 +15,7 @@
 <template v-slot:top>
         <div class="row items-center full-width">
           <div class="text-h6 text-weight-bold">Courses Management</div>
-          
+
           <q-space />
 
           <q-btn
@@ -29,7 +29,6 @@
         </div>
       </template>
 
-      <!-- Row actions -->
       <template v-slot:body-cell-action="props">
         <q-td :props="props">
           <q-btn dense flat round icon="visibility" color="primary" @click="viewCourse(props.row)">
@@ -44,7 +43,7 @@
         </q-td>
       </template>
 
-      <!-- No data -->
+
       <template v-slot:no-data="{ icon, filter }">
         <div class="full-width row flex-center text-accent q-gutter-sm">
           <q-icon size="2em" name="sentiment_dissatisfied" />
@@ -54,10 +53,29 @@
       </template>
     </q-table>
 
-    <!-- Add Courses Modal -->
     <AddCourses
       v-model="showAddCourseModal"
       @saved="handleCourseSaved"
+    />
+
+
+    <DeleteCourse
+      v-model="showDeleteCourseModal"
+      :course="selectedCourse"
+      @deleted="handleCourseDeleted"
+    />
+
+
+    <EditCourse
+      v-model="showEditCourseModal"
+      :course="selectedCourse"
+      @updated="handleCourseUpdated"
+    />
+
+
+    <ViewCourse
+      v-model="showViewCourseModal"
+      :course="selectedCourse"
     />
   </q-page>
 </template>
@@ -69,10 +87,18 @@ import { getCourses } from 'src/services/Courses/api'
 import { supabase } from 'boot/supabase'
 import type { CourseModel } from 'src/services/Courses/model'
 import AddCourses from './Modal/AddCourses.vue'
+import DeleteCourse from './Modal/DeleteCourse.vue'
+import EditCourse from './Modal/EditCourse.vue'
+import ViewCourse from './Modal/ViewCourse.vue'
 
 const rows = ref<CourseModel[]>([])
 const loading = ref(false)
 const showAddCourseModal = ref(false)
+const showDeleteCourseModal = ref(false)
+const showEditCourseModal = ref(false)
+const showViewCourseModal = ref(false)
+const selectedCourse = ref<CourseModel | null>(null)
+
 
 type Column = QTableProps['columns'][number]
 
@@ -95,7 +121,6 @@ const columns: Column[] = [
   { name: 'action', label: 'Action', field: 'action', align: 'right', sortable: false }
 ]
 
-// Fetch courses with pagination
 async function onRequest(props: any) {
   const { page, rowsPerPage, sortBy, descending } = props.pagination
   loading.value = true
@@ -120,23 +145,37 @@ onMounted(() => {
   onRequest({ pagination: pagination.value })
 })
 
-// Row actions
-function viewCourse(course: CourseModel) { console.log('View', course) }
-function editCourse(course: CourseModel) { console.log('Edit', course) }
-function deleteCourse(course: CourseModel) { console.log('Delete', course) }
+function viewCourse(course: CourseModel) {
+  selectedCourse.value = course;
+  showViewCourseModal.value = true;
+}
+function editCourse(course: CourseModel) {
+  selectedCourse.value = course;
+  showEditCourseModal.value = true;
+}
 
-// Handle course saved from modal
+function deleteCourse(course: CourseModel) {
+  selectedCourse.value = course;
+  showDeleteCourseModal.value = true;
+}
+
+function handleCourseDeleted() {
+  onRequest({ pagination: pagination.value });
+}
+
+function handleCourseUpdated( ) {
+  onRequest({ pagination: pagination.value });
+  showEditCourseModal.value = false;
+}
+
 async function handleCourseSaved(courseData: CourseModel) {
   try {
-    // Prepare data for insertion, excluding the created_at field which will be set by the database
     const courseForInsertion = {
       ...courseData,
-      // Convert string numbers to actual numbers for the database
       students: parseInt(courseData.students || '0'),
       rating: parseFloat(courseData.rating || '0')
     };
 
-    // Remove created_at field if it exists to let the database set it
     delete courseForInsertion.created_at;
 
     const { error } = await supabase.from('courses').insert([courseForInsertion])

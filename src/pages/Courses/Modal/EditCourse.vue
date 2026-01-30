@@ -2,7 +2,7 @@
   <q-dialog v-model="showModal" persistent>
     <q-card style="min-width: 400px;">
       <q-card-section>
-        <div class="text-h6">Yangi Course Qo'shish</div>
+        <div class="text-h6">Kursni Tahrirlash</div>
       </q-card-section>
 
       <q-card-section>
@@ -17,7 +17,7 @@
 
       <q-card-actions align="right">
         <q-btn flat label="Cancel" color="negative" @click="cancel" />
-        <q-btn label="Save" color="primary" @click="saveCourse" />
+        <q-btn label="Save" color="primary" @click="saveCourse" :loading="saving" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -26,17 +26,19 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import type { CourseModel } from 'src/services/Courses/model'
-import { addCourse } from 'src/services/Courses/api'
+import { updateCourse } from 'src/services/Courses/api'
 
 const props = defineProps<{
   modelValue: boolean
+  course: CourseModel | null
 }>()
 
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]
-  saved: [data: CourseModel]
+  updated: [data: CourseModel]
 }>()
 
+const saving = ref(false)
 const showModal = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
@@ -53,31 +55,24 @@ const localFormData = ref({
   color: '#3B82F6'
 })
 
-
-const formattedData = computed<CourseModel>(() => ({
-  id: localFormData.value.id,
-  created_at: '',
-  title: localFormData.value.title,
-  author: localFormData.value.author,
-  category: localFormData.value.category,
-  students: localFormData.value.students.toString(),
-  rating: localFormData.value.rating.toString(),
-  level: localFormData.value.level,
-  color: localFormData.value.color
-}))
+watch(() => props.course, (newCourse) => {
+  if (newCourse) {
+    localFormData.value = {
+      id: newCourse.id || '',
+      title: newCourse.title || '',
+      author: newCourse.author || '',
+      category: newCourse.category || '',
+      students: parseInt(newCourse.students) || 0,
+      rating: parseFloat(newCourse.rating) || 0,
+      level: newCourse.level || '',
+      color: newCourse.color || '#3B82F6'
+    }
+  }
+}, { immediate: true })
 
 watch(() => props.modelValue, (newVal) => {
-  if (newVal) {
-    localFormData.value = {
-      id: '',
-      title: '',
-      author: '',
-      category: '',
-      students: 0,
-      rating: 0,
-      level: '',
-      color: '#3B82F6'
-    }
+  if (!newVal) {
+    saving.value = false
   }
 })
 
@@ -86,14 +81,31 @@ function cancel() {
 }
 
 async function saveCourse() {
+  if (!props.course?.id) return
+
+  saving.value = true
   try {
-    const savedCourse = await addCourse(formattedData.value)
-    if (savedCourse) {
-      emit('saved', savedCourse)
+    const courseForUpdate = {
+      id: localFormData.value.id,
+      title: localFormData.value.title,
+      author: localFormData.value.author,
+      category: localFormData.value.category,
+      students: localFormData.value.students.toString(),
+      rating: localFormData.value.rating.toString(),
+      level: localFormData.value.level,
+      color: localFormData.value.color,
+      created_at: props.course.created_at
+    }
+
+    const updatedCourse = await updateCourse(courseForUpdate)
+    if (updatedCourse) {
+      emit('updated', updatedCourse)
       showModal.value = false
     }
   } catch (err) {
-    console.error('Course qo‘shishda xatolik:', err)
+    console.error('Course tahrirlashda xatolik:', err)
+  } finally {
+    saving.value = false
   }
 }
 </script>
