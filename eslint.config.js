@@ -3,6 +3,7 @@ import globals from 'globals'
 import pluginVue from 'eslint-plugin-vue'
 import pluginQuasar from '@quasar/app-vite/eslint'
 import prettierSkipFormatting from '@vue/eslint-config-prettier/skip-formatting'
+import tsParser from '@typescript-eslint/parser'
 
 export default [
   {
@@ -34,11 +35,13 @@ export default [
    */
   ...pluginVue.configs['flat/essential'],
 
+  // Configuration for TypeScript files
   {
+    files: ['**/*.ts'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-
+      parser: tsParser,
       globals: {
         ...globals.browser,
         ...globals.node, // SSR, Electron, config files
@@ -50,13 +53,31 @@ export default [
         browser: 'readonly', // BEX related
       },
     },
+  },
 
-    // add your custom rules here
-    rules: {
-      'prefer-promise-reject-errors': 'off',
-
-      // allow debugger during development only
-      'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+  // Configuration for Vue files with TypeScript support
+  {
+    files: ['**/*.vue'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      parser: (await import('vue-eslint-parser')).default,
+      parserOptions: {
+        parser: tsParser, // Use TypeScript parser for <script> blocks in Vue files
+        extraFileExtensions: ['.vue'],
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node, // SSR, Electron, config files
+        process: 'readonly', // process.env.*
+        ga: 'readonly', // Google Analytics
+        cordova: 'readonly',
+        Capacitor: 'readonly',
+        chrome: 'readonly', // BEX related
+        browser: 'readonly', // BEX related
+      },
     },
   },
 

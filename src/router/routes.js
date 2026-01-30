@@ -1,16 +1,25 @@
-const routes = [
+// routes.js
+import MainLayout from 'layouts/MainLayout.vue'
+import Dashboard from 'pages/Dashboard/DashboardPage.vue'
+import Courses from 'pages/Courses/CoursesPage.vue'
+import Enrollment from 'pages/Enrollment/enrollmentPage.vue'
+import Admin from 'pages/Admin/AdminPage.vue'
+import Reports from 'pages/Reports/ReportsPage.vue'
+import Settings from 'pages/Settings/SettingsPage.vue'
+import ErrorNotFound from 'pages/ErrorNotFound.vue'
+
+export default [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    component: MainLayout,
+    children: [
+      { path: '', name: 'dashboard', component: Dashboard },
+      { path: 'courses', name: 'courses', component: Courses },
+      { path: 'enrollment', name: 'enrollment', component: Enrollment },
+      { path: 'admin', name: 'admin', component: Admin },
+      { path: 'reports', name: 'reports', component: Reports },
+      { path: 'settings', name: 'settings', component: Settings },
+    ]
   },
-
-  // Always leave this as last one,
-  // but you can also remove it
-  {
-    path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
-  },
+  { path: '/:catchAll(.*)*', component: ErrorNotFound },
 ]
-
-export default routes

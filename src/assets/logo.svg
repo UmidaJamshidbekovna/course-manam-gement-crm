@@ -1,0 +1,25 @@
+<svg
+  width="240"
+  height="60"
+  viewBox="0 0 240 60"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- Icon -->
+  <g fill="#2563EB">
+    <path d="M10 15 C20 12, 30 12, 40 15" stroke="#2563EB" stroke-width="4" fill="none" />
+    <path d="M10 25 C20 22, 30 22, 40 25" stroke="#2563EB" stroke-width="4" fill="none" />
+    <path d="M10 35 C20 32, 30 32, 40 35" stroke="#2563EB" stroke-width="4" fill="none" />
+  </g>
+
+  <!-- Text -->
+  <text
+    x="55"
+    y="38"
+    font-size="28"
+    font-family="Arial, Helvetica, sans-serif"
+    fill="#2563EB"
+    font-weight="500"
+  >
+    Edaca
+  </text>
+</svg>
