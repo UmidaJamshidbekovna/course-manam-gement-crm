@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-// Reports logic keyin qo‘shiladi
+
 </script>
 
 <style scoped>

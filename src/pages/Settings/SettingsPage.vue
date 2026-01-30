@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-// Settings logic keyin qo‘shiladi
+
 </script>
 
 <style scoped>

@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-// Admin Users logic keyin qo‘shiladi
+
 </script>
 
 <style scoped>

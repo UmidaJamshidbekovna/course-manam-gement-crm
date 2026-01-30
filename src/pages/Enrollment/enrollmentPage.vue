@@ -38,11 +38,10 @@
 </template>
 
 <script setup>
-// Hozircha logika yo‘q (Coming Soon)
+
 </script>
 
 <style scoped>
-/* Agar kartani biroz kattaroq qilishni xohlasang */
 .q-card {
   min-height: 300px;
   border-radius: 12px;

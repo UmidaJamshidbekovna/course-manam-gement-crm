@@ -1,4 +1,3 @@
-// routes.js
 import MainLayout from 'layouts/MainLayout.vue'
 import Dashboard from 'pages/Dashboard/DashboardPage.vue'
 import Courses from 'pages/Courses/CoursesPage.vue'

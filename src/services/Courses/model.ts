@@ -4,8 +4,8 @@ export interface CourseModel {
   title: string | null;
   author: string | null;
   category: string | null;
-  students:string | null;
-  rating: string | null ;
-  level: string | null;
+  students:string ;
+  rating: string  ;
+  level: string ;
   color: string | null;
 }
